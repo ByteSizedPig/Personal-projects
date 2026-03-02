@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Game</title>
+</head>
+
+<body>
+    <style>
+        .page{
+            background-color: rgb(193, 63, 63);
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            grid-template-rows: repeat(3, 70px);
+        }
+      
+    </style>
+   
+   
+   
+   
+    <div class="page">
+        <div  id="stats"></div>
+        <div  id="view"></div>
+        <div  id="activity"></div>
+    </div>
+
+
+    <script>
+        const view = document.getElementById("view")
+        const activityView = document.getElementById("activity")
+        const stats = document.getElementById("stats")
+
+        let health = 100;
+        let money = 0;
+        let intelligence = 0;
+        let luck = 0;
+        let age = Math.ceil(Math.random() * 10);
+        let isAlive = true;
+        let statsIsShown = false;
+        let actionPoints = 5;
+        let currentActivity = "work";
+        const activities = ["work", "library", "casino"]
+
+
+
+
+        updateView()
+        function updateView() {
+            view.innerHTML = /*html*/`
+
+                ${addInteractivity("button", "showStats()", "View Stats")}
+  
+            <br>
+            ${addInteractivity("button", "increaseAge()", "Increase Age")}
+            ${age}
+            `
+        }
+
+        updateActivity()
+        function updateActivity() {
+            activityView.innerHTML += /*HTML*/`<br>
+            ${addInteractivity("button", "performActivity(currentActivity)", "go to")}
+            <select id="activitySelect" onchange="currentActivity = this.value">
+                ${workOptions()}
+            </select>
+            `
+        }
+
+
+
+        function addInteractivity(type, onclick, text) {
+            if (type == "button") {
+                return `<${type} onclick="${onclick}" class="button">${text}</button>`
+            }
+        }
+
+        function increaseAge() {
+            if (isAlive) {
+                age++
+                let deathRoll = Math.ceil((Math.random() * 10) + age)
+                if (deathRoll > 30) {
+                    isAlive = false
+                    statsIsShown = false
+                    showStats()
+                    view.innerHTML = `you're dead lol`
+                    activityView.innerHTML= ``
+                    
+                }
+                else {
+                    updateView()
+                    actionPoints = 5
+                }
+            }
+
+        }
+
+        function showStats() {
+            if (statsIsShown === false) {
+                stats.innerHTML +=/*html*/ `
+                health ${health} <br>
+                money ${money} <br>
+                intelligence ${intelligence} <br>
+                luck ${luck} <br>
+                action points ${actionPoints}
+                `
+                statsIsShown = true
+            }
+
+            else if (statsIsShown === true) {
+                stats.innerHTML =/*html*/ ``
+                statsIsShown = false
+            }
+        }
+
+        function performActivity(activity) {
+            if (activity === "work" && actionPoints >= 1) {
+                money += 100
+                actionPoints -= 1
+            }
+            else if (activity === "library" && actionPoints >= 1) {
+                actionPoints -= 1
+                increaseStats(activity)
+            }
+            else if (activity === "casino" && actionPoints >= 1) {
+                if (money < 100) {
+                    return alert("not enough money")
+                }
+                let number = Math.floor(Math.random() * 10 + luck)
+                if (number > 9) {
+                    money += 75
+                }
+                else {
+                    money -= 100
+                }
+                actionPoints -= 1
+                console.log(number)
+                increaseStats(activity)
+            }
+            else { alert("Not enough action points") }
+            updateView()
+        }
+
+        function increaseStats(activity) {
+            if (activity === "library" && intelligence < 10) {
+                intelligence++
+            }
+            else if (activity === "casino" && luck < 4) {
+                luck += 0.25
+            }
+            updateView();
+        }
+        
+        function workOptions() {
+            let html = "";
+            for (let i = 0; i < activities.length; i++) {
+                html += `<option>${activities[i]}</option>`
+            }
+            return html;
+        }
+    </script>
+</body>
+
+</html>
