@@ -7,15 +7,23 @@
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<h3>Bubble sort, fisher-yates shuffle</h3>
+		<h3>Bubble sort (30ms), fisher-yates shuffle</h3>
 		<div id="bubble" class="window"></div>
 
-		<h3>? sort, fisher-yates shuffle</h3>
-		<div id="bubble" class="window"></div>
+		<h3>distracted sort (30ms), fisher-yates shuffle</h3>
+		<div id="distracted" class="window"></div>
+
+		<h3>Cocktail sort (30ms), fisher-yates shuffle</h3>
+		<div id="cocktail" class="window"></div>
+
+		<button onclick="sortAll()">sort all</button>
+		<button onclick="shuffleAll()">shuffle all</button>
 
 		<script src="model.js" defer></script>
-		<script src="controller.js" defer></script>
 		<script src="view.js" defer></script>
+		<script src="controller.js" defer></script>
 		<script src="bubble.js" defer></script>
+		<script src="distractedBubble.js" defer></script>
+		<script src="cocktail.js" defer></script>
 	</body>
 </html>

@@ -1,37 +1,39 @@
-function visualizeSort() {
-	let html = "";
-	for (let i = 0; i < numbers.length; i++) {
-		html += /*HTML*/ `<div style="height: ${numbers[i] * 13}px" class="rectangle"></div>`;
-	}
-	return html;
-}
-
-//TODO: refactor this shite so that it's not O(n²)
-function fisherYatesShuffleOn2() {
-	let toShuffle = numbers.slice();
+//first attempt at fisher yates
+function fisherYatesShuffleOn2(update, array) {
+	let toShuffle = array.slice();
 	let shuffled = [];
-	for (let i = 0; i < numbers.length; i++) {
+	for (let i = 0; i < array.length; i++) {
 		let n = toShuffle[Math.floor(Math.random() * toShuffle.length)];
 		let index = toShuffle.indexOf(n);
 
 		shuffled.push(n);
 		toShuffle.splice(index, 1);
 	}
-	numbers = shuffled;
-	updateBubble();
+	array = shuffled;
+	update();
 }
 
-function fisherYatesShuffle() {
-	for (let i = 0; i < numbers.length; i++) {
-		let j = Math.floor(Math.random() * numbers.length);
-		[numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+async function fisherYatesShuffle(update, array) {
+	for (let i = 0; i < array.length; i++) {
+		let j = Math.floor(Math.random() * array.length);
+		[array[i], array[j]] = [array[j], array[i]];
+		await timeout(60);
+		update();
 	}
-	updateBubble();
 }
 
-// finish this
-function timeout() {
-	const time = setTimeout(() => {}, 100);
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-//TODO: add timer for sorts!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function sortAll() {
+	sort(bubbleNumbers);
+	distractedBubble();
+	cocktailSort();
+}
+
+function shuffleAll() {
+	fisherYatesShuffle(updateBubble, bubbleNumbers);
+	fisherYatesShuffle(updateDistracted, distractedArray);
+	fisherYatesShuffle(updateCocktail, cocktailArray);
+}
